@@ -23,24 +23,26 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+mongoose.connect("mongodb://localhost/sportsscrape", { useNewUrlParser: true });
 
 // Routes
 
 // A GET route for scraping the website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
-  axios.get("https://www.msn.com/en-us/sports").then(function(response) {
+  axios.get("https://www.foxnews.com/sports").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
     // Now, we grab every h3 within an li tag with hlhu3 class, and do the following:
-    $("li.hlhu3 h3").each(function(i, element) {
+    $("article h4").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this).text();
+      result.title = $(this)
+      .children("a")
+      .text();
 
       result.link = $(this)
         .children("a")
@@ -64,7 +66,7 @@ app.get("/scrape", function(req, res) {
 });
 
 // Route for getting all Articles from the db
-app.get("/articles", function(req, res) {
+app.get("/headlines", function(req, res) {
   // Grab every document in the Articles collection
   db.Headline.find({})
     .then(function(dbHeadline) {
