@@ -23,9 +23,24 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
+var exphbs = require("express-handlebars");
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
 mongoose.connect("mongodb://localhost/sportsscrape", { useNewUrlParser: true });
 
 // Routes
+
+app.get("/", function(req,res) {
+  res.render("index");
+})
+
+app.get("/saved", function(req, res) {
+
+  res.render("saved");
+
+})
 
 // A GET route for scraping the website
 app.get("/scrape", function(req, res) {
@@ -61,7 +76,7 @@ app.get("/scrape", function(req, res) {
     });
 
     // Send a message to the client
-    res.send("Scrape Complete");
+    res.render("index");
   });
 });
 
@@ -77,6 +92,8 @@ app.get("/headlines", function(req, res) {
       // If an error occurred, send it to the client
       res.json(err);
     });
+    
+    // res.render("index")
 });
 
 // // Route for grabbing a specific Article by id, populate it with it's note
