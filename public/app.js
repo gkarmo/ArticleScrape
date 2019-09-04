@@ -5,7 +5,16 @@ $.getJSON("/headlines", function(data) {
       $("#headlines").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
     }
   });
-  
+
+
+  // $(document).ready(function(){
+  //   $("#saved-button").click(function(){
+
+  //     alert("loading saved headlines");
+
+  //   });
+  // });
+     
   // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
     // Empty the notes from the note section
